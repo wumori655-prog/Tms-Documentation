@@ -2,23 +2,6 @@
 ---
 
 # 交互原型
-
-<div class="prototype-container">
-  <div class="prototype-info">
-    <h3>📐 操盘页原型</h3>
-    <p>操盘手核心工作界面，提供赔率调整、实时监控、盘口管理等功能。</p>
-    <div class="prototype-meta">
-      <span>📅 更新时间：2026-02-11</span>
-      <span>📦 版本：v1.8</span>
-    </div>
-  </div>
-  <div class="prototype-actions">
- <a href="/prototype/Trading-Detail.html" target="_blank" class="btn-primary">
-      🚀 打开原型
-    </a>
-  </div>
-</div>
-
 ## 原型说明
 
 ### 操盘列表原型
@@ -150,47 +133,5 @@
 - 移除赛事信息头中的返奖率统计（RTP仅在盘口卡片级别显示和编辑）
 - 统一所有页面顶部导航样式和数据源状态显示格式
 - 统一盘口卡片背景色和边框色与其他模块一致
-
-<style>
-.prototype-container {
-  background: linear-gradient(135deg, #1a1f2e 0%, #252b3b 100%);
-  border-radius: 12px;
-  padding: 24px;
-  margin: 24px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-}
-.prototype-info h3 {
-  margin: 0 0 8px 0;
-  color: #58a6ff;
-}
-.prototype-info p {
-  margin: 0 0 12px 0;
-  color: #8b949e;
-}
-.prototype-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 12px;
-  color: #6e7681;
-}
-.prototype-actions {
-  display: flex;
-  gap: 12px;
-}
-.btn-primary {
-  background: #238636;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 500;
-}
-.btn-primary:hover {
-  background: #2ea043;
-}
-</style>
 
 ---

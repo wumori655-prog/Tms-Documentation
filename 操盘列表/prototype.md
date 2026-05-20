@@ -3,23 +3,6 @@ title: 交互原型
 ---
 
 # 交互原型
-
-<div class="prototype-container">
-  <div class="prototype-info">
-    <h3>📐 操盘列表原型</h3>
-    <p>完整的操盘列表页面交互原型，包含所有功能模块的交互演示。</p>
-    <div class="prototype-meta">
-      <span>📅 更新时间：2026-01-29</span>
-      <span>📦 版本：v1.1</span>
-    </div>
-  </div>
-  <div class="prototype-actions">
-    <a href="/prototype/trading-list.html" target="_blank" class="btn-primary">
-      🚀 打开原型
-    </a>
-  </div>
-</div>
-
 ## 原型说明
 
 ### 功能覆盖
@@ -41,45 +24,3 @@ title: 交互原型
 - **勾选赛事**：显示批量操作栏
 - **点击联赛标题**：折叠/展开该联赛赛事
 - **按 `?` 键**：显示快捷键提示
-
-<style>
-.prototype-container {
-  background: linear-gradient(135deg, #1a1f2e 0%, #252b3b 100%);
-  border-radius: 12px;
-  padding: 24px;
-  margin: 24px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-}
-.prototype-info h3 {
-  margin: 0 0 8px 0;
-  color: #58a6ff;
-}
-.prototype-info p {
-  margin: 0 0 12px 0;
-  color: #8b949e;
-}
-.prototype-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 12px;
-  color: #6e7681;
-}
-.prototype-actions {
-  display: flex;
-  gap: 12px;
-}
-.btn-primary {
-  background: #238636;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 500;
-}
-.btn-primary:hover {
-  background: #2ea043;
-}
-</style>

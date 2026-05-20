@@ -88,6 +88,37 @@
       border-radius: 4px; background: #fff; pointer-events: none;
     }
     .app-search.has-text .shortcut-hint { display: none; }
+
+    /* ========== 原型按钮（右上角） ========== */
+    .prototype-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      flex-shrink: 0;
+      transition: all .15s;
+      box-shadow: 0 1px 2px rgba(35,134,54,.2);
+    }
+    .prototype-btn:hover {
+      background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
+      box-shadow: 0 2px 6px rgba(35,134,54,.3);
+      transform: translateY(-1px);
+    }
+    .prototype-btn .rocket { font-size: 14px; }
+    .prototype-btn.disabled {
+      background: var(--bg-color);
+      color: var(--text-light);
+      cursor: not-allowed;
+      box-shadow: none;
+      border: 1px solid var(--border-color);
+    }
+    .prototype-btn.disabled:hover { transform: none; box-shadow: none; }
     .app-search .results {
       position: absolute; top: calc(100% + 6px);
       left: 0; right: 0; background: #fff;
@@ -361,6 +392,10 @@
       <div class="results" id="searchResults"></div>
     </div>
   </div>
+  <a id="prototypeBtn" class="prototype-btn" href="#" target="_blank" rel="noopener" style="display:none">
+    <span class="rocket">🚀</span>
+    <span>打开原型</span>
+  </a>
 </div>
 
 <div class="app-tabs">
@@ -375,6 +410,20 @@
 <div id="app">加载中…</div>
 
 <script>
+// ===========================================
+// 📐 原型网址设定（要更新连结时改这里就好）
+// 把 null 改成实际网址；如果某模块没有原型，保持 null 即可
+// ===========================================
+const PROTOTYPE_URLS = {
+  '操盘列表': null,   // 例: 'https://figma.com/file/xxx'
+  '操盘页': null,
+  '结算报表': null,
+  '风控管理': null,
+  // 未来新增模块时直接在这里加一行：
+  // '新模块名': 'https://...',
+};
+// ===========================================
+
 // ========== 全局状态 ==========
 let currentTab = null;
 let MODULES = [];       // 自动从 _sidebar.md 读出的模块顺序
@@ -521,11 +570,30 @@ function setActiveTab(mod, navigateToFirst) {
   // 更新 sidebar 过滤
   markSidebarModules();
 
+  // 更新右上角「打开原型」按钮
+  updatePrototypeBtn(mod);
+
   // 如果是用户点 Tab 触发的，跳到该模块第一篇
   if (navigateToFirst && sidebarData[mod] && sidebarData[mod].length > 0) {
     const firstDoc = sidebarData[mod][0];
     const hashPath = firstDoc.path.replace(/\.md$/, '');
     location.hash = '#/' + hashPath;
+  }
+}
+
+// ========== 更新原型按钮 ==========
+function updatePrototypeBtn(mod) {
+  const btn = document.getElementById('prototypeBtn');
+  if (!btn) return;
+  const url = PROTOTYPE_URLS[mod];
+  if (url) {
+    btn.href = url;
+    btn.style.display = 'inline-flex';
+    btn.classList.remove('disabled');
+    btn.title = '在新分页打开 ' + mod + ' 原型';
+  } else {
+    // 没设定网址 → 隐藏按钮
+    btn.style.display = 'none';
   }
 }
 
