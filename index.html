@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>操盘系统 · 产品文档</title>
-  <meta name="description" content="操盘系统产品文档">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   <style>
     :root {
@@ -16,7 +15,10 @@
       --bg-color: #fafbfc;
       --sidebar-bg: #ffffff;
       --header-h: 56px;
-      --sidebar-w: 300px;
+      --tabs-h: 44px;
+      --top-h: 100px;
+      --sidebar-w: 280px;
+      --toc-w: 220px;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Roboto, sans-serif;
@@ -24,7 +26,7 @@
       color: var(--text-color);
     }
 
-    /* 顶部 Header */
+    /* ========== Header ========== */
     .app-header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -38,174 +40,165 @@
       box-shadow: 0 1px 2px rgba(0,0,0,.04);
     }
     .app-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: calc(var(--sidebar-w) - 24px);
-      text-decoration: none;
-      color: var(--text-color);
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0; text-decoration: none; color: var(--text-color);
     }
     .app-logo-mark {
-      width: 32px; height: 32px;
-      background: var(--theme-color);
-      color: #fff;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
+      width: 32px; height: 32px; background: var(--theme-color);
+      color: #fff; border-radius: 6px; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
     }
     .app-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
     .app-logo-text .t1 { font-size: 14px; font-weight: 600; }
     .app-logo-text .t2 { font-size: 11px; color: var(--text-light); }
-    .app-breadcrumb {
-      flex: 1;
-      font-size: 13px;
-      color: var(--text-light);
-      padding-left: 16px;
-    }
-    .app-breadcrumb .sep { color: #d1d5db; margin: 0 8px; }
-    .app-breadcrumb .current { color: var(--text-color); font-weight: 500; }
 
-    /* 顶部搜索框 */
-    .app-search { position: relative; width: 360px; }
+    /* 搜索框置中 */
+    .app-search-wrap {
+      flex: 1; display: flex; justify-content: center; padding: 0 24px;
+    }
+    .app-search { position: relative; width: 100%; max-width: 520px; }
     .app-search input {
-      width: 100%;
-      padding: 8px 36px 8px 36px;
-      font-size: 13px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background: var(--bg-color);
-      outline: none;
-      transition: all .15s;
-      box-sizing: border-box;
+      width: 100%; padding: 9px 36px 9px 38px;
+      font-size: 13.5px; border: 1px solid var(--border-color);
+      border-radius: 6px; background: var(--bg-color);
+      outline: none; transition: all .15s; box-sizing: border-box;
     }
     .app-search input:focus {
-      border-color: var(--theme-color);
-      background: #fff;
+      border-color: var(--theme-color); background: #fff;
       box-shadow: 0 0 0 3px rgba(37,99,235,.1);
     }
     .app-search .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light);
-      font-size: 16px;
-      pointer-events: none;
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%); color: var(--text-light);
+      font-size: 16px; pointer-events: none;
     }
     .app-search .clear-btn {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      font-size: 16px;
-      display: none;
-      padding: 2px 6px;
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%); background: none; border: none;
+      color: var(--text-light); cursor: pointer; font-size: 16px;
+      display: none; padding: 2px 6px;
     }
     .app-search.has-text .clear-btn { display: block; }
     .app-search .shortcut-hint {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light);
-      font-size: 11px;
-      padding: 2px 6px;
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%); color: var(--text-light);
+      font-size: 11px; padding: 2px 6px;
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: #fff;
-      pointer-events: none;
+      border-radius: 4px; background: #fff; pointer-events: none;
     }
     .app-search.has-text .shortcut-hint { display: none; }
     .app-search .results {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0; right: 0;
-      background: #fff;
+      position: absolute; top: calc(100% + 6px);
+      left: 0; right: 0; background: #fff;
       border: 1px solid var(--border-color);
-      border-radius: 8px;
-      max-height: 70vh;
-      overflow-y: auto;
+      border-radius: 8px; max-height: 70vh; overflow-y: auto;
       box-shadow: 0 8px 24px rgba(0,0,0,.12);
-      display: none;
-      z-index: 1100;
+      display: none; z-index: 1100;
     }
     .app-search.active .results { display: block; }
-    .app-search .result-section {
-      padding: 6px 0;
-      border-bottom: 1px solid var(--border-color);
+    .result-section { padding: 6px 0; border-bottom: 1px solid var(--border-color); }
+    .result-section:last-child { border-bottom: none; }
+    .result-section-title {
+      padding: 8px 14px 4px; font-size: 10px; font-weight: 600;
+      color: var(--text-light); text-transform: uppercase; letter-spacing: .5px;
     }
-    .app-search .result-section:last-child { border-bottom: none; }
-    .app-search .result-section-title {
-      padding: 8px 14px 4px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: .5px;
+    .result-item {
+      padding: 10px 14px; cursor: pointer;
+      border-left: 2px solid transparent; transition: background .1s;
     }
-    .app-search .result-item {
-      padding: 10px 14px;
-      cursor: pointer;
-      border-left: 2px solid transparent;
-      transition: background .1s;
-    }
-    .app-search .result-item:hover,
-    .app-search .result-item.active {
+    .result-item:hover, .result-item.active {
       background: var(--theme-color-light);
       border-left-color: var(--theme-color);
     }
-    .app-search .result-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-color);
-      margin-bottom: 2px;
-    }
-    .app-search .result-path {
-      font-size: 11px;
-      color: var(--text-light);
-      margin-bottom: 4px;
-    }
-    .app-search .result-snippet {
-      font-size: 12px;
-      color: var(--text-light);
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .result-title { font-size: 13px; font-weight: 500; color: var(--text-color); margin-bottom: 2px; }
+    .result-path { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+    .result-snippet {
+      font-size: 12px; color: var(--text-light); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
     }
     .app-search mark {
-      background: #fef3c7;
-      color: inherit;
-      padding: 0 2px;
-      border-radius: 2px;
-      font-weight: 600;
+      background: #fef3c7; color: inherit;
+      padding: 0 2px; border-radius: 2px; font-weight: 600;
     }
-    .app-search .no-results {
-      padding: 24px;
-      text-align: center;
-      color: var(--text-light);
-      font-size: 13px;
-    }
-    .app-search .result-footer {
-      padding: 8px 14px;
-      font-size: 11px;
-      color: var(--text-light);
-      background: var(--bg-color);
-      border-top: 1px solid var(--border-color);
+    .no-results { padding: 24px; text-align: center; color: var(--text-light); font-size: 13px; }
+    .result-footer {
+      padding: 8px 14px; font-size: 11px; color: var(--text-light);
+      background: var(--bg-color); border-top: 1px solid var(--border-color);
       text-align: center;
     }
 
-    /* Docsify 主体调整 */
-    body .sidebar {
+    /* ========== 顶部 Tabs（可横向滚动） ========== */
+    .app-tabs {
+      position: fixed;
       top: var(--header-h);
+      left: 0; right: 0;
+      height: var(--tabs-h);
+      background: #fff;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .app-tabs-scroll {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      flex: 1;
+      height: 100%;
+      scrollbar-width: thin;
+    }
+    .app-tabs-scroll::-webkit-scrollbar { height: 4px; }
+    .app-tabs-scroll::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+    .app-tab {
+      padding: 8px 16px;
+      font-size: 13.5px;
+      color: var(--text-light);
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      position: relative;
+      transition: color .1s;
+      user-select: none;
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .app-tab:hover { color: var(--text-color); background: var(--bg-color); }
+    .app-tab.active { color: var(--theme-color); font-weight: 600; }
+    .app-tab.active::after {
+      content: ""; position: absolute;
+      bottom: -1px; left: 12px; right: 12px;
+      height: 2px; background: var(--theme-color);
+      border-radius: 2px 2px 0 0;
+    }
+    .app-tab .count {
+      display: inline-block; margin-left: 6px;
+      padding: 1px 7px; background: var(--border-color);
+      color: var(--text-light); border-radius: 10px;
+      font-size: 10px; font-weight: 500;
+    }
+    .app-tab.active .count { background: var(--theme-color-light); color: var(--theme-color); }
+
+    .app-breadcrumb-inline {
+      margin-left: 16px;
+      padding-left: 16px;
+      border-left: 1px solid var(--border-color);
+      font-size: 12px;
+      color: var(--text-light);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .app-breadcrumb-inline:empty { display: none; }
+    .app-breadcrumb-inline .sep { color: #d1d5db; margin: 0 6px; }
+    .app-breadcrumb-inline .current { color: var(--text-color); font-weight: 500; }
+
+    /* ========== Docsify 主体 ========== */
+    body .sidebar {
+      top: var(--top-h);
       width: var(--sidebar-w);
       background: var(--sidebar-bg);
       border-right: 1px solid var(--border-color);
@@ -213,18 +206,23 @@
     }
     body .sidebar > h1 { display: none; }
     body .content {
-      top: var(--header-h);
+      top: var(--top-h);
       left: var(--sidebar-w);
+      right: 0;
       padding-top: 16px;
     }
     body .markdown-section {
       max-width: 880px;
-      padding: 32px 48px;
+      padding: 36px 56px;
       background: #fff;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       margin: 16px auto;
     }
+    @media (min-width: 1280px) {
+      body .markdown-section { margin-right: calc(var(--toc-w) + 32px); }
+    }
+
     .sidebar ul { list-style: none; padding: 0; margin: 0; }
     .sidebar ul li { margin: 1px 0; }
     .sidebar ul li a {
@@ -241,45 +239,33 @@
       text-overflow: ellipsis;
     }
     .sidebar ul li a:hover { background: #f3f4f6; text-decoration: none; }
-    .sidebar ul li.active > a,
-    .sidebar ul li > a.active {
+    .sidebar ul li.active > a, .sidebar ul li > a.active {
       background: var(--theme-color-light);
       color: var(--theme-color);
       font-weight: 500;
-      border-right: none;
     }
-    .sidebar ul li > p {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      padding: 10px 20px 6px;
-      margin: 8px 0 0;
-    }
+    /* 隐藏模块名称（因为在 Tab 显示了） */
+    .sidebar ul li > p { display: none; }
     .sidebar .search { display: none !important; }
 
-    /* 内容区文字样式 */
+    /* Tab 过滤：隐藏非 active 模块的 li */
+    .sidebar[data-active-module] > .sidebar-nav > ul > li { display: none; }
+    .sidebar[data-active-module] > .sidebar-nav > ul > li.module-active { display: block; }
+
+    /* ========== 内容样式 ========== */
     .markdown-section h1 {
-      font-size: 26px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
-      margin-top: 0;
+      font-size: 26px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color); margin-top: 0;
     }
     .markdown-section h2 { font-size: 21px; margin-top: 32px; }
     .markdown-section h3 { font-size: 17px; margin-top: 24px; }
     .markdown-section h4 { font-size: 15px; margin-top: 20px; }
     .markdown-section p, .markdown-section li {
-      font-size: 14.5px;
-      line-height: 1.75;
-      color: var(--text-color);
+      font-size: 14.5px; line-height: 1.75; color: var(--text-color);
     }
     .markdown-section code {
-      background: #f3f4f6;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-size: 0.88em;
-      color: #d63384;
+      background: #f3f4f6; padding: 2px 6px; border-radius: 3px;
+      font-size: 0.88em; color: #d63384;
     }
     .markdown-section pre { background: #f8f9fa; border-radius: 6px; }
     .markdown-section pre > code { background: transparent; color: var(--text-color); }
@@ -289,19 +275,57 @@
       border-left: 3px solid var(--theme-color);
       background: var(--theme-color-light);
       color: var(--text-color);
-      padding: 12px 16px;
-      border-radius: 0 6px 6px 0;
+      padding: 12px 16px; border-radius: 0 6px 6px 0;
     }
+
+    /* ========== 右侧 TOC ========== */
+    .app-toc {
+      position: fixed;
+      top: calc(var(--top-h) + 24px);
+      right: 24px;
+      width: var(--toc-w);
+      max-height: calc(100vh - var(--top-h) - 48px);
+      overflow-y: auto;
+      font-size: 12.5px;
+      padding: 12px 0;
+      z-index: 10;
+    }
+    .app-toc-title {
+      font-size: 11px; font-weight: 600; color: var(--text-light);
+      text-transform: uppercase; letter-spacing: .5px;
+      padding: 0 14px 12px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 8px;
+    }
+    .app-toc a {
+      display: block; padding: 5px 14px;
+      color: var(--text-light); text-decoration: none;
+      border-left: 2px solid transparent;
+      line-height: 1.5; transition: all .1s;
+    }
+    .app-toc a:hover { color: var(--theme-color); }
+    .app-toc a.active {
+      color: var(--theme-color);
+      border-left-color: var(--theme-color);
+      background: var(--theme-color-light);
+      font-weight: 500;
+    }
+    .app-toc a.lv-1 { font-weight: 600; color: var(--text-color); }
+    .app-toc a.lv-2 { padding-left: 14px; }
+    .app-toc a.lv-3 { padding-left: 28px; font-size: 12px; }
+    .app-toc a.lv-4 { padding-left: 42px; font-size: 11.5px; color: #9ca3af; }
+    @media (max-width: 1280px) { .app-toc { display: none; } }
 
     .docsify-pagination-container { display: none; }
     nav.app-nav { display: none; }
     section.cover { display: none; }
 
     @media (max-width: 768px) {
-      .app-search { width: 200px; }
-      .app-breadcrumb { display: none; }
-      .app-logo { min-width: auto; }
-      body .content { left: 0; padding-top: var(--header-h); }
+      .app-search-wrap { padding: 0 12px; }
+      .app-logo-text { display: none; }
+      .app-tab { padding: 8px 12px; font-size: 12.5px; }
+      .app-breadcrumb-inline { display: none; }
+      body .content { left: 0; }
       body .markdown-section { padding: 20px; margin: 12px; }
     }
   </style>
@@ -316,21 +340,34 @@
       <div class="t2">Product Documentation</div>
     </div>
   </a>
-  <div class="app-breadcrumb" id="appBreadcrumb">
-    <span>选择左侧章节开始阅读</span>
-  </div>
-  <div class="app-search" id="appSearch">
-    <span class="search-icon">⌕</span>
-    <input type="text" id="searchInput" placeholder="搜索文档关键词…" autocomplete="off" spellcheck="false">
-    <span class="shortcut-hint">/</span>
-    <button class="clear-btn" id="clearBtn" type="button">×</button>
-    <div class="results" id="searchResults"></div>
+  <div class="app-search-wrap">
+    <div class="app-search" id="appSearch">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="搜索文档关键词（用空格分隔多个关键字）…" autocomplete="off" spellcheck="false">
+      <span class="shortcut-hint">/</span>
+      <button class="clear-btn" id="clearBtn" type="button">×</button>
+      <div class="results" id="searchResults"></div>
+    </div>
   </div>
 </div>
+
+<div class="app-tabs">
+  <div class="app-tabs-scroll" id="appTabsScroll">
+    <!-- Tabs 会由 JS 从 _sidebar.md 自动生成 -->
+  </div>
+  <div class="app-breadcrumb-inline" id="appBreadcrumb"></div>
+</div>
+
+<aside class="app-toc" id="appToc"></aside>
 
 <div id="app">加载中…</div>
 
 <script>
+// ========== 全局状态 ==========
+let currentTab = null;
+let MODULES = [];       // 自动从 _sidebar.md 读出的模块顺序
+let sidebarData = {};   // { 模块名: [{title, path, file}, ...] }
+
 window.$docsify = {
   name: '',
   loadSidebar: true,
@@ -340,27 +377,221 @@ window.$docsify = {
   homepage: 'README.md',
   notFoundPage: false,
   alias: { '/.*/_sidebar.md': '/_sidebar.md' },
-  sidebarDisplayLevel: 1,
   plugins: [
     function(hook, vm) {
       hook.doneEach(function() {
+        // 更新 breadcrumb
         const bc = document.getElementById('appBreadcrumb');
-        if (!bc) return;
-        const path = vm.route.path || '';
-        const parts = path.split('/').filter(p => p);
-        if (parts.length === 0) {
-          bc.innerHTML = '<span>选择左侧章节开始阅读</span>';
-        } else if (parts.length === 1) {
-          bc.innerHTML = '<span>' + decodeURIComponent(parts[0]) + '</span>';
-        } else {
-          const mod = decodeURIComponent(parts[0]);
-          const file = decodeURIComponent(parts[parts.length - 1]).replace('.md', '');
-          bc.innerHTML = '<span>' + mod + '</span><span class="sep">/</span><span class="current">' + file + '</span>';
+        if (bc) {
+          const path = vm.route.path || '';
+          const parts = path.split('/').filter(p => p);
+          if (parts.length === 0) {
+            bc.innerHTML = '';
+          } else if (parts.length >= 2) {
+            const mod = decodeURIComponent(parts[0]);
+            const file = decodeURIComponent(parts[parts.length - 1]).replace('.md', '');
+            bc.innerHTML = '<span>' + mod + '</span><span class="sep">/</span><span class="current">' + file + '</span>';
+          } else {
+            bc.innerHTML = '<span>' + decodeURIComponent(parts[0]) + '</span>';
+          }
+
+          // 自动根据 URL 切换 Tab
+          if (parts.length > 0) {
+            const mod = decodeURIComponent(parts[0]);
+            if (MODULES.includes(mod) && currentTab !== mod) {
+              setActiveTab(mod, false);
+            }
+          }
         }
+
+        markSidebarModules();
+        generateTOC();
       });
     }
   ]
 };
+
+// ========== 解析 _sidebar.md 找出所有模块 ==========
+async function parseSidebar() {
+  try {
+    const res = await fetch('_sidebar.md');
+    const text = await res.text();
+
+    // 解析格式：
+    // - **模块名**            ← 模块（粗体）
+    //   - [标题](路径)        ← 文档
+    const lines = text.split('\n');
+    let currentMod = null;
+    MODULES = [];
+    sidebarData = {};
+
+    for (const line of lines) {
+      // 模块行（顶层、含粗体）
+      const modMatch = line.match(/^-\s*\*\*(.+?)\*\*\s*$/);
+      if (modMatch) {
+        currentMod = modMatch[1].trim();
+        if (!MODULES.includes(currentMod)) {
+          MODULES.push(currentMod);
+          sidebarData[currentMod] = [];
+        }
+        continue;
+      }
+      // 文档行：[标题](路径.md)
+      const docMatch = line.match(/\[([^\]]+)\]\(([^)]+\.md)\)/);
+      if (docMatch && currentMod) {
+        const title = docMatch[1];
+        const path = docMatch[2];
+        const file = path.split('/').pop().replace('.md', '');
+        sidebarData[currentMod].push({ title, path, file });
+      }
+    }
+
+    console.log('解析到模块:', MODULES);
+    renderTabs();
+  } catch (e) {
+    console.error('parseSidebar 失败', e);
+  }
+}
+
+// ========== 渲染 Tabs ==========
+function renderTabs() {
+  const tabsContainer = document.getElementById('appTabsScroll');
+  let html = '';
+  MODULES.forEach(mod => {
+    const count = (sidebarData[mod] || []).length;
+    html += '<div class="app-tab" data-mod="' + escapeAttr(mod) + '">';
+    html += escapeHtml(mod);
+    html += ' <span class="count">' + count + '</span>';
+    html += '</div>';
+  });
+  tabsContainer.innerHTML = html;
+
+  // 绑定点击
+  tabsContainer.querySelectorAll('.app-tab').forEach(el => {
+    el.addEventListener('click', () => {
+      const mod = el.getAttribute('data-mod');
+      setActiveTab(mod, true);
+    });
+  });
+
+  // 如果还没有 active tab，看看当前 URL 是哪个模块
+  if (!currentTab) {
+    const hash = location.hash || '';
+    const m = hash.match(/^#\/([^/]+)/);
+    if (m) {
+      const mod = decodeURIComponent(m[1]);
+      if (MODULES.includes(mod)) {
+        setActiveTab(mod, false);
+      }
+    }
+  }
+}
+
+function escapeAttr(s) {
+  return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+// ========== Tab 切换 ==========
+function setActiveTab(mod, navigateToFirst) {
+  currentTab = mod;
+  // 更新 Tab UI
+  document.querySelectorAll('.app-tab').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('data-mod') === mod);
+  });
+  // 让 active tab 滚动到可见
+  const activeTab = document.querySelector('.app-tab.active');
+  if (activeTab) {
+    activeTab.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }
+  // 更新 sidebar 过滤
+  markSidebarModules();
+
+  // 如果是用户点 Tab 触发的，跳到该模块第一篇
+  if (navigateToFirst && sidebarData[mod] && sidebarData[mod].length > 0) {
+    const firstDoc = sidebarData[mod][0];
+    const hashPath = firstDoc.path.replace(/\.md$/, '');
+    location.hash = '#/' + hashPath;
+  }
+}
+
+// ========== 标记 sidebar li 属于哪个模块 ==========
+function markSidebarModules() {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar) return;
+  const topUl = sidebar.querySelector('.sidebar-nav > ul');
+  if (!topUl) return;
+
+  const topLis = topUl.children;
+  for (let i = 0; i < topLis.length; i++) {
+    const li = topLis[i];
+    const p = li.querySelector(':scope > p');
+    if (p) {
+      const modName = p.textContent.trim();
+      li.setAttribute('data-module', modName);
+      li.classList.toggle('module-active', modName === currentTab);
+    }
+  }
+
+  if (currentTab) {
+    sidebar.setAttribute('data-active-module', currentTab);
+  } else {
+    sidebar.removeAttribute('data-active-module');
+  }
+}
+
+// ========== 右侧 TOC ==========
+function generateTOC() {
+  const toc = document.getElementById('appToc');
+  const section = document.querySelector('.markdown-section');
+  if (!section) { toc.innerHTML = ''; return; }
+
+  const headings = section.querySelectorAll('h1, h2, h3, h4');
+  if (!headings.length) { toc.innerHTML = ''; return; }
+
+  let html = '<div class="app-toc-title">本页目录</div>';
+  headings.forEach((h, i) => {
+    if (!h.id) {
+      h.id = 'h-' + i + '-' + h.textContent.trim().substring(0, 20).replace(/\s+/g, '-');
+    }
+    const level = parseInt(h.tagName[1]);
+    const text = h.textContent.trim();
+    html += '<a href="#" data-target="' + escapeAttr(h.id) + '" class="lv-' + level + '">' + escapeHtml(text) + '</a>';
+  });
+  toc.innerHTML = html;
+
+  toc.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('data-target');
+      const target = document.getElementById(id);
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 110;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+window.addEventListener('scroll', () => {
+  const section = document.querySelector('.markdown-section');
+  if (!section) return;
+  const headings = section.querySelectorAll('h1, h2, h3, h4');
+  let currentId = null;
+  for (const h of headings) {
+    const rect = h.getBoundingClientRect();
+    if (rect.top < 150) currentId = h.id;
+    else break;
+  }
+  document.querySelectorAll('.app-toc a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('data-target') === currentId);
+  });
+});
+
+// 启动时解析 sidebar
+parseSidebar();
 </script>
 
 <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
@@ -387,7 +618,7 @@ window.$docsify = {
 </script>
 
 <script>
-// 自定义搜索引擎（不依赖 Docsify search plugin）
+// ========== 自定义搜索 ==========
 (function() {
   const input = document.getElementById('searchInput');
   const results = document.getElementById('searchResults');
@@ -402,33 +633,30 @@ window.$docsify = {
   async function buildIndex() {
     if (loaded || loading) return;
     loading = true;
-    results.innerHTML = '<div class="no-results">正在加载文档索引…</div>';
-    wrap.classList.add('active');
 
     try {
-      const sidebarRes = await fetch('_sidebar.md');
-      const sidebarText = await sidebarRes.text();
-      const linkRegex = /\[([^\]]+)\]\(([^)]+\.md)\)/g;
-      const links = [];
-      let m;
-      while ((m = linkRegex.exec(sidebarText)) !== null) {
-        const title = m[1];
-        const path = m[2];
-        const parts = path.split('/');
-        const module = parts.length > 1 ? parts[0] : '';
-        const file = parts[parts.length - 1].replace('.md', '');
-        links.push({ title, path, module, file });
+      // 等 sidebarData 准备好（从 parseSidebar 来）
+      let waitCount = 0;
+      while (Object.keys(sidebarData).length === 0 && waitCount < 20) {
+        await new Promise(r => setTimeout(r, 100));
+        waitCount++;
+      }
+
+      // 把 sidebarData 的所有文件拉出来
+      const allDocs = [];
+      for (const mod in sidebarData) {
+        for (const doc of sidebarData[mod]) {
+          allDocs.push({ ...doc, module: mod });
+        }
       }
 
       const BATCH = 10;
-      for (let i = 0; i < links.length; i += BATCH) {
-        const batch = links.slice(i, i + BATCH);
+      for (let i = 0; i < allDocs.length; i += BATCH) {
+        const batch = allDocs.slice(i, i + BATCH);
         const contents = await Promise.all(
           batch.map(async (l) => {
-            try {
-              const r = await fetch(l.path);
-              return await r.text();
-            } catch (e) { return ''; }
+            try { const r = await fetch(l.path); return await r.text(); }
+            catch (e) { return ''; }
           })
         );
         contents.forEach((content, j) => {
@@ -448,17 +676,15 @@ window.$docsify = {
       loaded = true;
       loading = false;
       if (input.value) search(input.value);
-      else { wrap.classList.remove('active'); }
     } catch (e) {
       loading = false;
-      results.innerHTML = '<div class="no-results">索引加载失败：' + e.message + '</div>';
+      console.error('搜索索引加载失败', e);
     }
   }
 
+  setTimeout(buildIndex, 800);
+
   function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
-  }
 
   function highlight(text, keywords) {
     let result = escapeHtml(text);
@@ -479,13 +705,12 @@ window.$docsify = {
     return minIdx;
   }
 
-  function extractSnippet(content, keywords, maxLen) {
-    maxLen = maxLen || 120;
+  function extractSnippet(content, keywords) {
     const lower = content.toLowerCase();
     const idx = findFirstHit(lower, keywords);
-    if (idx < 0) return content.substring(0, maxLen);
+    if (idx < 0) return content.substring(0, 120);
     const start = Math.max(0, idx - 30);
-    const end = Math.min(content.length, idx + maxLen);
+    const end = Math.min(content.length, idx + 120);
     let snippet = content.substring(start, end);
     snippet = snippet.replace(/[#*`>\[\]()]/g, '').replace(/\s+/g, ' ').trim();
     return (start > 0 ? '…' : '') + snippet + (end < content.length ? '…' : '');
@@ -509,7 +734,12 @@ window.$docsify = {
   function search(query) {
     const q = query.trim();
     if (!q) { results.innerHTML = ''; wrap.classList.remove('active'); return; }
-    if (!loaded) { buildIndex(); return; }
+    if (!loaded) {
+      results.innerHTML = '<div class="no-results">正在加载文档索引…</div>';
+      wrap.classList.add('active');
+      buildIndex();
+      return;
+    }
 
     const queryLower = q.toLowerCase();
     const keywords = queryLower.split(/\s+/).filter(k => k.length > 0);
@@ -544,7 +774,7 @@ window.$docsify = {
       html += '<div class="result-section-title">' + escapeHtml(mod) + ' · ' + docs.length + ' 个结果</div>';
       docs.forEach(d => {
         const snippet = extractSnippet(d.content, keywords);
-        html += '<div class="result-item" data-path="' + escapeHtml(d.path) + '">';
+        html += '<div class="result-item" data-path="' + escapeAttr(d.path) + '">';
         html += '<div class="result-title">' + highlight(d.title, keywords) + '</div>';
         html += '<div class="result-path">' + escapeHtml(d.module) + ' / ' + escapeHtml(d.file) + '.md</div>';
         if (snippet) html += '<div class="result-snippet">' + highlight(snippet, keywords) + '</div>';
@@ -582,32 +812,19 @@ window.$docsify = {
     clearTimeout(timer);
     timer = setTimeout(() => search(v), 150);
   });
-
   input.addEventListener('focus', () => {
     if (input.value) search(input.value);
     if (!loaded && !loading) buildIndex();
   });
-
-  clearBtn.addEventListener('click', () => {
-    clearSearch();
-    input.focus();
-  });
-
+  clearBtn.addEventListener('click', () => { clearSearch(); input.focus(); });
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.app-search')) {
-      wrap.classList.remove('active');
-    }
+    if (!e.target.closest('.app-search')) wrap.classList.remove('active');
   });
-
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== input && !e.ctrlKey && !e.metaKey) {
-      e.preventDefault();
-      input.focus();
+      e.preventDefault(); input.focus();
     }
-    if (e.key === 'Escape') {
-      clearSearch();
-      input.blur();
-    }
+    if (e.key === 'Escape') { clearSearch(); input.blur(); }
     if (wrap.classList.contains('active')) {
       const items = results.querySelectorAll('.result-item');
       if (!items.length) return;
