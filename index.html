@@ -244,13 +244,19 @@
       color: var(--theme-color);
       font-weight: 500;
     }
-    /* 隐藏模块名称（因为在 Tab 显示了） */
-    .sidebar ul li > p { display: none; }
+    /* 隐藏模块名称的 <p>（因为在 Tab 显示了），但不影响文档列表 */
+    .sidebar .sidebar-nav > ul > li > p { display: none; }
     .sidebar .search { display: none !important; }
 
-    /* Tab 过滤：隐藏非 active 模块的 li */
-    .sidebar[data-active-module] > .sidebar-nav > ul > li { display: none; }
-    .sidebar[data-active-module] > .sidebar-nav > ul > li.module-active { display: block; }
+    /* Tab 过滤：隐藏非 active 模块的 li，但保留 active 模块 */
+    .sidebar[data-active-module] .sidebar-nav > ul > li { display: none; }
+    .sidebar[data-active-module] .sidebar-nav > ul > li.module-active { display: block !important; }
+    /* 确保 active 模块内的所有元素都可见 */
+    .sidebar[data-active-module] .sidebar-nav > ul > li.module-active ul,
+    .sidebar[data-active-module] .sidebar-nav > ul > li.module-active li,
+    .sidebar[data-active-module] .sidebar-nav > ul > li.module-active a {
+      display: block !important;
+    }
 
     /* ========== 内容样式 ========== */
     .markdown-section h1 {
@@ -525,15 +531,40 @@ function markSidebarModules() {
   if (!topUl) return;
 
   const topLis = topUl.children;
+  let markedCount = 0;
+
   for (let i = 0; i < topLis.length; i++) {
     const li = topLis[i];
+    let modName = null;
+
+    // 方式 1：找直接子层的 <p>（Docsify 通常会把 **模块名** 渲染成 <p><strong>模块名</strong></p>）
     const p = li.querySelector(':scope > p');
     if (p) {
-      const modName = p.textContent.trim();
+      modName = p.textContent.trim();
+    }
+    // 方式 2：找 <strong>（如果 Docsify 没包 <p>）
+    if (!modName) {
+      const strong = li.querySelector(':scope > strong, :scope > p > strong');
+      if (strong) modName = strong.textContent.trim();
+    }
+    // 方式 3：用 li 的直接文字节点（去掉子元素）
+    if (!modName) {
+      const clone = li.cloneNode(true);
+      // 移除所有子元素，留下文字
+      Array.from(clone.children).forEach(c => {
+        if (c.tagName !== 'STRONG') c.remove();
+      });
+      modName = clone.textContent.trim();
+    }
+
+    if (modName && MODULES.includes(modName)) {
       li.setAttribute('data-module', modName);
       li.classList.toggle('module-active', modName === currentTab);
+      markedCount++;
     }
   }
+
+  console.log('已标记 sidebar 模块数:', markedCount, '当前 Tab:', currentTab);
 
   if (currentTab) {
     sidebar.setAttribute('data-active-module', currentTab);
