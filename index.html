@@ -219,8 +219,14 @@
       border-radius: 8px;
       margin: 16px auto;
     }
+    /* 给右侧 TOC 留位置时，让内容在「左侧导航 + 右侧 TOC」之间置中 */
     @media (min-width: 1280px) {
-      body .markdown-section { margin-right: calc(var(--toc-w) + 32px); }
+      body .content {
+        padding-right: calc(var(--toc-w) + 48px);
+      }
+      body .markdown-section {
+        margin: 16px auto;
+      }
     }
 
     .sidebar ul { list-style: none; padding: 0; margin: 0; }
