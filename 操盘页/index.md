@@ -4,19 +4,6 @@
 
 ## 交互原型
 
-<iframe src="/prototype/Trading-Detail.html" width="100%" height="700" style="border: 1px solid #30363d; border-radius: 8px; background: #0d1117;"></iframe>
-
-::: tip 原型说明
-这是完整的交互原型，支持以下操作：
-
-- **左侧面板**：赛事切换、玩法导航
-- **中间区域**：盘口卡片、赔率编辑、状态控制
-- **右侧面板**：投注监控、告警信息、操盘日志
-- **弹窗交互**：操盘日志、切场确认、设置
-
-[新窗口打开原型 →](/prototype/Trading-Detail.html)
-:::
-
 ---
 
 ## 文档清单

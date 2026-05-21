@@ -4,8 +4,6 @@
 
 ## 交互原型
 
-<iframe src="/prototype/trading-list.html" width="100%" height="700" style="border: 1px solid #30363d; border-radius: 8px; background: #0d1117;"></iframe>
-
 > **原型说明**
 >
 > 这是完整的交互原型，支持以下操作：
@@ -15,7 +13,7 @@
 > - **数据表格**：勾选赛事、上架/锁盘操作
 > - **弹窗交互**：上架确认、锁盘确认
 >
-> [新窗口打开原型 →](/prototype/trading-list.html)
+> 
 
 ## 文档清单
 
