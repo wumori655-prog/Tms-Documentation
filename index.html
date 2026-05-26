@@ -437,6 +437,26 @@ let MODULES = [];       // 自动从 _sidebar.md 读出的模块顺序
 let sidebarData = {};   // { 模块名: [{title, path, file}, ...] }
 
 window.$docsify = {
+  // === v1.1 改动(2026-05-26):禁用客户端缓存,确保文档更新后能立即看到 ===
+  noEmoji: false,
+  requestHeaders: {
+    'cache-control': 'no-cache',
+    'pragma': 'no-cache'
+  },
+  // === 给所有 md 请求加时间戳参数,强制破缓存 ===
+  // 通过 hook 实现:每次请求 md 时在 URL 后加 ?t=随机数
+  plugins_no_cache_prepend: function(hook, vm) {
+    // 在 docsify 加载完成前,劫持 fetch 加时间戳
+    var originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      if (typeof url === 'string' && url.endsWith('.md')) {
+        var sep = url.indexOf('?') === -1 ? '?' : '&';
+        url = url + sep + '_t=' + Date.now();
+      }
+      return originalFetch.call(this, url, options);
+    };
+  },
+  
   name: '',
   loadSidebar: true,
   subMaxLevel: 0,
@@ -446,6 +466,8 @@ window.$docsify = {
   notFoundPage: false,
   alias: { '/.*/_sidebar.md': '/_sidebar.md' },
   plugins: [
+    // v1.1 改动:破缓存插件(必须在所有其他 plugin 之前执行)
+    window.$docsify.plugins_no_cache_prepend,
     function(hook, vm) {
       hook.doneEach(function() {
         // 更新 breadcrumb
